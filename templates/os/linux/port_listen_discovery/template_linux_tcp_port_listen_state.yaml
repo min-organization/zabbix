@@ -1,0 +1,50 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: 846977d1dfed4968bc5f8bdb363285bc
+      name: 'Templates/Operating systems'
+  templates:
+    - uuid: b18932c10566454db1e1390fa5ad4cbc
+      template: 'Linux TCP Port Listen State Auto-Discovery'
+      name: 'Linux TCP Port Listen State Auto-Discovery'
+      description: |
+        This Zabbix template monitors Linux system TCP ports by analyzing a specified file. It can automatically identify and monitor relevant ports, helping users track port status.
+        
+        https://github.com/min-organization/zabbix
+      groups:
+        - name: 'Templates/Operating systems'
+      discovery_rules:
+        - uuid: e674bd7b94e94c45955ecc7f49a48682
+          name: 'Port Discovery'
+          type: ZABBIX_ACTIVE
+          key: net.tcp.listen.discovery
+          delay: 5m
+          lifetime: 1d
+          item_prototypes:
+            - uuid: 9ce47fd06d654238999aff32e6e3b8d8
+              name: '{#SERVICE} {#PORT} LISTEN state'
+              type: ZABBIX_ACTIVE
+              key: 'net.tcp.listen[{#PORT}]'
+              history: 90d
+              valuemap:
+                name: 'LISTEN state'
+              tags:
+                - tag: Application
+                  value: port
+              trigger_prototypes:
+                - uuid: a8ebf4194c2a4e9cbee45da2c416c5bd
+                  expression: 'last(/Linux TCP Port Listen State Auto-Discovery/net.tcp.listen[{#PORT}])=0'
+                  name: '{#SERVICE} {#PORT} Not Listening'
+                  priority: HIGH
+                  manual_close: 'YES'
+      tags:
+        - tag: component
+          value: port
+      valuemaps:
+        - uuid: fde2632994154e53851b1eb27bb22386
+          name: 'LISTEN state'
+          mappings:
+            - value: '0'
+              newvalue: 'Not Listening'
+            - value: '1'
+              newvalue: Listening
