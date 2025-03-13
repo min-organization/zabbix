@@ -1,0 +1,463 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+  templates:
+    - uuid: dcecd9379a2943b2b5f098931ed28435
+      template: 'Zookeeper by Script'
+      name: 'Zookeeper by Script'
+      description: |
+        ZooKeeper responds to a small set of commands. Each command is composed of four letters. 
+        If zookeeper version > 3.5.3 ,should add "4lw.commands.whitelist=cons, ruok, mntr, isro" to zoo.cfg
+        
+        https://github.com/min-organization/zabbix
+      groups:
+        - name: Templates/Applications
+      items:
+        - uuid: 2d810501815c44aa90d8003d88daca66
+          name: 'Zookeeper connection recved'
+          type: DEPENDENT
+          key: zookeeper.metric.cons.recved
+          delay: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.recved
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},cons]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 8d8cd40cd0e64635b56badfe70368c40
+          name: 'Zookeeper connection sent'
+          type: DEPENDENT
+          key: zookeeper.metric.cons.sent
+          delay: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.sent
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},cons]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 4c7c2d9ff2e44efca8fcf830d4dcad70
+          name: 'Zookeeper approximate data size'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_approximate_data_size
+          delay: '0'
+          units: B
+          description: 'Data tree size in bytes.The size includes the znode path and its value.'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_approximate_data_size\s+([\d]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 383aab204a624fb18a9c38f357758e67
+          name: 'Zookeeper latency avg'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_avg_latency
+          delay: '0'
+          units: ms
+          description: 'The average amount of time it takes for the server to respond to a client request.'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_avg_latency\s+([\d]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: e8e68eabdd8f4b67865ed32a4f8665aa
+          name: 'Zookeeper ephemeral nodes count'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_ephemerals_count
+          delay: '0'
+          description: 'Number of ephemeral nodes that a zookeeper server has in its data tree.'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_ephemerals_count\s+([\d]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 7771c42601c14ea88fd9765a6f0af354
+          name: 'Zookeeper file descriptors max'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_max_file_descriptor_count
+          delay: '0'
+          description: 'Maximum number of file descriptors that a zookeeper server can open.'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_max_file_descriptor_count\s+([\d]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 39097b98711742ffb9c2de80dd3b92d3
+          name: 'Zookeeper latency max'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_max_latency
+          delay: '0'
+          units: ms
+          description: 'The maximum amount of time it takes for the server to respond to a client request.'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_max_latency\s+([\d]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 801b7c8532f748d1baf07b88562dfb4a
+          name: 'Zookeeper latency min'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_min_latency
+          delay: '0'
+          units: ms
+          description: 'The minimum amount of time it takes for the server to respond to a client request.'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_min_latency\s+([\d]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: fe1f9634109d4e04939e14687ac575c6
+          name: 'Zookeeper alive connections'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_num_alive_connections
+          delay: '0'
+          description: 'Number of active clients connected to a zookeeper server.'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_num_alive_connections\s+([\d]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 17aa18d5b40146b8b1b5a59d8acc5cf6
+          name: 'Zookeeper file descriptors open'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_open_file_descriptor_count
+          delay: '0'
+          description: 'Number of file descriptors that a zookeeper server has open.'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_open_file_descriptor_count\s+([\d]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: b5b5249d637047409f306484817a0c2f
+          name: 'Zookeeper outstanding requests'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_outstanding_requests
+          delay: '0'
+          description: 'The number of queued requests when the server is under load and is receiving more sustained requests than it can process.'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_outstanding_requests\s+([\d]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+          triggers:
+            - uuid: 218c28c431a7465cba68445d9aaf5e9f
+              expression: 'min(/Zookeeper by Script/zookeeper.metric.zk_outstanding_requests,5m) > {$ZOOKEEPER.OUTSTANDING_REQ.MAX.WARN}'
+              name: 'Zookeeper: Too many queued requests'
+              event_name: 'Zookeeper: Too many queued requests (over {$ZOOKEEPER.OUTSTANDING_REQ.MAX.WARN}% for 5 min)'
+              priority: AVERAGE
+              description: 'Number of queued requests in the server. This goes up when the server receives more requests than it can process.'
+              manual_close: 'YES'
+        - uuid: 83c1b8edba564f25bd266377101d6281
+          name: 'Zookeeper packets received per sec'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_packets_received.rate
+          delay: '0'
+          value_type: FLOAT
+          description: 'The number of zookeeper packets received by a server per second.'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_packets_received\s+([\d]+)'
+                - \1
+            - type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 78bc1b8b185244e49576e2d7fb4e1f2e
+          name: 'Zookeeper packets sent per sec'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_packets_sent.rate
+          delay: '0'
+          value_type: FLOAT
+          description: 'The number of zookeeper packets sent from a server per second.'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_packets_sent\s+([\d]+)'
+                - \1
+            - type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 458718f4371b41a48527f675cbe26fab
+          name: 'Zookeeper server mode'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_server_state
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          description: 'Mode of the server. In an ensemble, this may either be leader or follower. Otherwise, it is standalone'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_server_state\s+([\w]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+          triggers:
+            - uuid: 3213a9012546413da05b4037843be0d0
+              expression: 'last(/Zookeeper by Script/zookeeper.metric.zk_server_state,#1) <> last(/Zookeeper by Script/zookeeper.metric.zk_server_state,#1) and length(last(/Zookeeper by Script/zookeeper.metric.zk_server_state))>0'
+              name: 'Zookeeper: Server mode has changed'
+              event_name: 'Zookeeper: Server mode has changed (new mode: {ITEM.VALUE})'
+              priority: INFO
+              description: 'Zookeeper node state has changed. Acknowledge to close the problem manually.'
+              manual_close: 'YES'
+        - uuid: 2e87bd83872f4106a6c574605ad773f4
+          name: 'Zookeeper version'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_version
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_version\s+([\d\.]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 011d88002483492087f218ea87728b37
+          name: 'Zookeeper watch count'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_watch_count
+          delay: '0'
+          description: 'Number of watches currently set on the local ZooKeeper process.'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_watch_count\s+([\d]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 61ba6826bada4d328418af8fea25b18b
+          name: 'Zookeeper znode count'
+          type: DEPENDENT
+          key: zookeeper.metric.zk_znode_count
+          delay: '0'
+          description: 'The number of znodes in the ZooKeeper namespace (the data)'
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - 'zk_znode_count\s+([\d]+)'
+                - \1
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 59ee8e6d937c4a6a85f5a028c1e20880
+          name: 'Zookeeper get cons'
+          key: 'zookeeper.metric[{$ZOOKEEPER_HOST},cons]'
+          history: '0'
+          value_type: TEXT
+          trends: '0'
+          description: 'Get information on client connections to server. Note, depending on the number of client connections this operation may be expensive (i.e. impact server performance).'
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  var queuedSum = 0;
+                  var recvedSum = 0;
+                  var sentSum = 0;
+                  
+                  // 遍历每行数据
+                  value.split('\n').forEach(function(line) {
+                      var match = line.match(/queued=(\d+),recved=(\d+),sent=(\d+)/);
+                      if (match) {
+                          queuedSum += parseInt(match[1]);
+                          recvedSum += parseInt(match[2]);
+                          sentSum += parseInt(match[3]);
+                      }
+                  });
+                  
+                  // 返回求和结果
+                  return JSON.stringify({
+                      queued: queuedSum,
+                      recved: recvedSum,
+                      sent: sentSum
+                  });
+          tags:
+            - tag: component
+              value: raw
+            - tag: component
+              value: zookeeper
+        - uuid: 10369590e2764fc7a0975b4a080f4593
+          name: 'Zookeeper read-only mode'
+          key: 'zookeeper.metric[{$ZOOKEEPER_HOST},isro]'
+          valuemap:
+            name: read-only
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  if (value === "rw") {
+                      return "0";
+                  } else if (value === "ro") {
+                      return "1";
+                  } else {
+                      return "-1";
+                  }
+          tags:
+            - tag: component
+              value: zookeeper
+        - uuid: 59556928318a45beaf918388ac539530
+          name: 'Zookeeper get mntr'
+          key: 'zookeeper.metric[{$ZOOKEEPER_HOST},mntr]'
+          history: '0'
+          value_type: TEXT
+          trends: '0'
+          tags:
+            - tag: component
+              value: raw
+            - tag: component
+              value: zookeeper
+        - uuid: 9384a051dc8d4d49af916af465b3a432
+          name: 'Zookeeper running in a non-error state'
+          key: 'zookeeper.metric[{$ZOOKEEPER_HOST},ruok]'
+          description: 'Tests if the server is running in a non-error state. When the whitelist enables ruok, the server will respond with imok if it is running, otherwise it will not respond at all. When ruok is disabled, the server responds with: "ruok is not executed because it is not in the whitelist." A response of "imok" does not necessarily indicate that the server has joined the quorum, just that the server process is active and bound to the specified client port. Use "stat" for details on state wrt quorum and client connection information.'
+          valuemap:
+            name: ruok
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  if (value === "imok") {
+                      return "1";
+                  } else {
+                      return "0";
+                  }
+          tags:
+            - tag: component
+              value: zookeeper
+          triggers:
+            - uuid: 86a8b9c6ed654d6fa716e3c336e4ac8d
+              expression: 'nodata(/Zookeeper by Script/zookeeper.metric[{$ZOOKEEPER_HOST},ruok],5m)=1'
+              name: 'Zookeeper: Failed to fetch data'
+              event_name: 'Zookeeper: Failed to fetch info data (or no data for 5m)'
+              priority: WARNING
+              description: 'Zabbix has not received data for items for the last 5 minutes'
+              manual_close: 'YES'
+            - uuid: 47aadb04525e42f6930b29628a275048
+              expression: 'last(/Zookeeper by Script/zookeeper.metric[{$ZOOKEEPER_HOST},ruok])=0'
+              name: 'Zookeeper: running in a error state'
+              priority: WARNING
+              dependencies:
+                - name: 'Zookeeper: Failed to fetch data'
+                  expression: 'nodata(/Zookeeper by Script/zookeeper.metric[{$ZOOKEEPER_HOST},ruok],5m)=1'
+        - uuid: 7e63139b4a5947969927458aded3c643
+          name: 'Zookeeper connection queued'
+          type: DEPENDENT
+          key: zooneeper.metric.cons.queued
+          delay: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.queued
+          master_item:
+            key: 'zookeeper.metric[{$ZOOKEEPER_HOST},cons]'
+          tags:
+            - tag: component
+              value: zookeeper
+      macros:
+        - macro: '{$ZOOKEEPER.FILE_DESCRIPTORS.MAX.WARN}'
+          value: '85'
+          description: 'Maximum percentage of file descriptors usage alert threshold (for trigger expression).'
+        - macro: '{$ZOOKEEPER.OUTSTANDING_REQ.MAX.WARN}'
+          value: '20'
+          description: 'Maximum number of outstanding requests (for trigger expression).'
+        - macro: '{$ZOOKEEPER_HOST}'
+          value: '127.0.0.1:2181'
+          description: 'The hostname or IP address and port of the Apache Zookeeper.'
+      valuemaps:
+        - uuid: 4298e73dd2a24a29bf81fb0e0e6658ad
+          name: read-only
+          mappings:
+            - value: '1'
+              newvalue: read-only
+            - value: '0'
+              newvalue: read-write
+            - value: '-1'
+              newvalue: other
+        - uuid: 185a109aef0a4a44b76ae53cfeae3519
+          name: ruok
+          mappings:
+            - value: '1'
+              newvalue: imok
+            - value: '0'
+              newvalue: error
+  triggers:
+    - uuid: 84094ad530414240a086592dc6502139
+      expression: 'min(/Zookeeper by Script/zookeeper.metric.zk_open_file_descriptor_count,5m)=0 / last(/Zookeeper by Script/zookeeper.metric.zk_max_file_descriptor_count) * 100 > {$ZOOKEEPER.FILE_DESCRIPTORS.MAX.WARN}'
+      name: 'Zookeeper: Too many file descriptors used'
+      event_name: 'Zookeeper: Too many file descriptors used (over {$ZOOKEEPER.FILE_DESCRIPTORS.MAX.WARN}% for 5 min)'
+      priority: WARNING
+      description: 'Number of file descriptors used more than {$ZOOKEEPER.FILE_DESCRIPTORS.MAX.WARN}% of the available number of file descriptors.'
